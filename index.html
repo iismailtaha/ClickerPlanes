@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    <title>iyi yolculuklar...</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            cursor: pointer;
+        }
+
+        /* Göz yormayan huzurlu turkuaz gökyüzü gradyanı */
+        .turquoise-sky {
+            background: linear-gradient(
+                180deg,
+                #2c9ead 0%,
+                #38b2ac 26%,
+                #4fd1c5 62%,
+                #81e6d9 85%,
+                #e6fffa 100%
+            );
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Hafif atmosferik güneş ışıltısı */
+        .sky-glow {
+            position: absolute;
+            top: -15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85vw;
+            height: 55vh;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.24) 0%, rgba(181, 236, 235, 0) 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* İleri - geri hafifçe salınan bulut animasyonları */
+        @keyframes swaySlow {
+            0% { transform: translateX(-35px) translateY(0px); }
+            50% { transform: translateX(15px) translateY(-6px); }
+            100% { transform: translateX(40px) translateY(3px); }
+        }
+
+        @keyframes swayReverse {
+            0% { transform: translateX(40px) translateY(0px); }
+            50% { transform: translateX(-10px) translateY(5px); }
+            100% { transform: translateX(-40px) translateY(-4px); }
+        }
+
+        @keyframes swayGentle {
+            0% { transform: translateX(-25px) scale(1); }
+            100% { transform: translateX(30px) scale(1.03); }
+        }
+
+        .cloud-layer-1 { animation: swaySlow 9s ease-in-out infinite alternate; }
+        .cloud-layer-2 { animation: swayReverse 12s ease-in-out infinite alternate; }
+        .cloud-layer-3 { animation: swayGentle 7.5s ease-in-out infinite alternate; }
+
+        /* ==========================================
+           GİZLİ EASTER EGG (gizli.png) ANİMASYONLARI
+           ========================================== */
+        @keyframes gizliFloat {
+            0% { transform: translateX(-16px) translateY(0px) rotate(-1.5deg); }
+            50% { transform: translateX(0px) translateY(-6px) rotate(0.5deg); }
+            100% { transform: translateX(16px) translateY(2px) rotate(1.5deg); }
+        }
+
+        .gizli-container {
+            position: absolute;
+            bottom: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 18px;
+            z-index: 40;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: transform 1.5s cubic-bezier(0.30, 0.25, 0.30, 0.55);
+        }
+
+        .gizli-container.dismissed {
+            transform: translateX(calc(-50% - 80vw - 320px)) translateY(-20px) rotate(-4deg);
+            pointer-events: none;
+        }
+
+        .gizli-float-wrap {
+            animation: gizliFloat 5.2s ease-in-out infinite alternate;
+        }
+
+        .gizli-img {
+            display: block;
+            max-width: 550px;
+            max-height: 500px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 18px rgba(14, 58, 71, 0.22));
+            transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .gizli-img:hover {
+            transform: scale(1.05);
+        }
+
+        .gizli-img.popped {
+            transform: scale(1.16) rotate(-3deg);
+        }
+
+        @media (max-width: 640px) {
+            .gizli-img {
+                max-width: 180px;
+                max-height: 86px;
+            }
+        }
+
+        /* ==========================================
+           UÇAK UÇUŞ ANİMASYONU
+           ========================================== */
+        @keyframes flyDiagonalUp {
+            0% {
+                transform: translate3d(0px, 0px, 0) scale(0.94);
+                opacity: 0;
+            }
+            7% { opacity: 1; }
+            92% { opacity: 1; }
+            100% {
+                transform: translate3d(var(--delta-x, 260px), var(--delta-y, -135vh), 0) scale(1.02);
+                opacity: 0;
+            }
+        }
+
+        .plane-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 15;
+            will-change: transform, opacity;
+            animation: flyDiagonalUp var(--flight-duration, 4s) cubic-bezier(0.22, 0.44, 0.42, 0.96) forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plane-img {
+            display: block;
+            width: var(--plane-size, 185px);
+            height: auto;
+            object-fit: contain;
+            max-width: none;
+            filter: drop-shadow(0 14px 22px rgba(14, 58, 71, 0.26));
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        /* ==========================================
+           ÇİÇEK & KALP YAĞMURU ANİMASYONLARI
+           ========================================== */
+        @keyframes flowerFall {
+            0% {
+                transform: translate3d(0px, -110px, 0);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            86% { opacity: 0.96; }
+            100% {
+                transform: translate3d(var(--drift-x, 40px), 114vh, 0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flowerSwaySpin {
+            0% {
+                transform: translateX(calc(var(--sway-amp, 24px) * -1)) rotate(var(--rot-start, -25deg));
+            }
+            50% {
+                transform: translateX(var(--sway-amp, 24px)) rotate(var(--rot-mid, 20deg));
+            }
+            100% {
+                transform: translateX(calc(var(--sway-amp, 24px) * -0.8)) rotate(var(--rot-end, -15deg));
+            }
+        }
+
+        .flower-faller {
+            position: absolute;
+            top: -50px;
+            pointer-events: none;
+            z-index: 25;
+            will-change: transform, opacity;
+            animation: flowerFall var(--fall-duration, 5.5s) linear var(--fall-delay, 0s) both;
+        }
+
+        .flower-swayer {
+            will-change: transform;
+            animation: flowerSwaySpin var(--sway-duration, 2.8s) ease-in-out var(--sway-delay, 0s) infinite alternate;
+        }
+
+        .flower-img {
+            display: block;
+            width: var(--flower-size, 52px);
+            height: auto;
+            object-fit: contain;
+            filter: var(--flower-filter, drop-shadow(0 6px 12px rgba(14, 58, 71, 0.2)));
+        }
+
+        /* Tıklama dalga (ripple) efekti */
+        @keyframes clickRipple {
+            0% {
+                transform: translate(-50%, -50%) scale(0.2);
+                opacity: 0.65;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2.4);
+                opacity: 0;
+            }
+        }
+
+        .tap-ripple {
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            border-radius: 9999px;
+            border: 2px solid rgba(255, 255, 255, 0.75);
+            background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+            z-index: 12;
+            animation: clickRipple 0.65s ease-out forwards;
+        }
+
+        /* Sayaç artış zıplama efekti */
+        .counter-pop {
+            transform: scale(1.12);
+        }
+
+        /* Cam efektli (Glassmorphism) kontroller */
+        .glass-pill {
+            background: rgba(15, 58, 70, 0.34);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.24);
+        }
+
+        .glass-pill.muted {
+            background: rgba(15, 40, 48, 0.22);
+            border-color: rgba(255, 255, 255, 0.14);
+            opacity: 0.68;
+        }
+
+        .glass-panel {
+            background: rgba(15, 58, 70, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+        }
+
+        #planeConfigList::-webkit-scrollbar { width: 5px; }
+        #planeConfigList::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.06); border-radius: 8px; }
+        #planeConfigList::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.28); border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- Ana Gökyüzü Alanı -->
+    <main id="skyStage" class="turquoise-sky flex flex-col items-center justify-center">
+        
+        <!-- Yumuşak Atmosfer Işığı -->
+        <div class="sky-glow"></div>
+
+        <!-- ==========================================
+             SAĞ ÜST: SES (ARKA PLAN) & EFEKT BUTONLARI
+             ========================================== -->
+        <div id="audioControls" class="fixed top-4 right-4 z-50 flex items-center gap-2">
+            <button id="toggleAmbientBtn" class="glass-pill hover:bg-white/20 text-white text-xs px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5 transition duration-200" title="Havalimanı Arka Plan Sesi">
+                <span id="ambientIcon">🎧</span>
+                <span class="hidden sm:inline font-medium tracking-wide">Ortam</span>
+            </button>
+
+            <button id="toggleSfxBtn" class="glass-pill hover:bg-white/20 text-white text-xs px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5 transition duration-200" title="Uçak ve Efekt Sesleri">
+                <span id="sfxIcon">🔊</span>
+                <span class="hidden sm:inline font-medium tracking-wide">Efekt</span>
+            </button>
+
+            <button id="toggleFlowersBtn" class="glass-pill hover:bg-white/20 text-white text-xs px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5 transition duration-200" title="Çiçek Sürprizleri">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none">
+                    <!-- Basit vektör papatya -->
+                    <circle cx="12" cy="6.5" r="2.7" fill="currentColor" opacity="0.9"/>
+                    <circle cx="16.8" cy="9.2" r="2.7" fill="currentColor" opacity="0.9"/>
+                    <circle cx="16.8" cy="14.8" r="2.7" fill="currentColor" opacity="0.9"/>
+                    <circle cx="12" cy="17.5" r="2.7" fill="currentColor" opacity="0.9"/>
+                    <circle cx="7.2" cy="14.8" r="2.7" fill="currentColor" opacity="0.9"/>
+                    <circle cx="7.2" cy="9.2" r="2.7" fill="currentColor" opacity="0.9"/>
+                    <circle cx="12" cy="12" r="2.8" fill="#fde047"/>
+                    <!-- Kapatınca üstüne gelen çizgi -->
+                    <line id="flowerSlash" x1="3.5" y1="20.5" x2="20.5" y2="3.5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" class="hidden"/>
+                </svg>
+                <span class="hidden sm:inline font-medium tracking-wide">Çiçek</span>
+            </button>
+        </div>
+
+        <!-- ==========================================
+             ARKA PLAN BULUT KATMANLARI
+             ========================================== -->
+        <div class="inset-0 pointer-events-none z-10 overflow-hidden absolute">
+            <div class="cloud-layer-1 absolute top-[8%] left-[4%] md:left-[8%] opacity-45">
+                <svg class="w-48 md:w-72 h-auto text-white fill-current" viewBox="0 0 240 100">
+                    <path d="M 45,80 Q 20,80 20,58 Q 20,38 42,36 Q 50,14 78,14 Q 104,14 114,34 Q 126,24 144,26 Q 165,28 170,48 Q 195,50 195,66 Q 195,80 172,80 Z" />
+                </svg>
+            </div>
+
+            <div class="cloud-layer-2 absolute top-[12%] right-[3%] md:right-[9%] opacity-35">
+                <svg class="w-56 md:w-80 h-auto text-white fill-current" viewBox="0 0 260 110">
+                    <path d="M 50,85 Q 25,85 25,63 Q 25,45 46,42 Q 58,15 92,15 Q 124,15 136,40 Q 155,32 174,42 Q 190,50 192,65 Q 214,66 214,76 Q 214,85 194,85 Z" />
+                </svg>
+            </div>
+
+            <div class="cloud-layer-3 absolute top-[38%] left-[-4%] md:left-[5%] opacity-30">
+                <svg class="w-64 md:w-96 h-auto text-white fill-current" viewBox="0 0 260 110">
+                    <path d="M 45,80 Q 20,80 20,58 Q 20,38 42,36 Q 50,14 78,14 Q 104,14 114,34 Q 126,24 144,26 Q 165,28 170,48 Q 195,50 195,66 Q 195,80 172,80 Z" />
+                </svg>
+            </div>
+
+            <div class="cloud-layer-1 absolute top-[46%] right-[-5%] md:right-[6%] opacity-40">
+                <svg class="w-52 md:w-80 h-auto text-white fill-current" viewBox="0 0 240 100">
+                    <path d="M 45,80 Q 20,80 20,58 Q 20,38 42,36 Q 50,14 78,14 Q 104,14 114,34 Q 126,24 144,26 Q 165,28 170,48 Q 195,50 195,66 Q 195,80 172,80 Z" />
+                </svg>
+            </div>
+
+            <div class="cloud-layer-2 absolute bottom-[12%] left-[8%] md:left-[16%] opacity-45">
+                <svg class="w-60 md:w-96 h-auto text-white fill-current" viewBox="0 0 260 110">
+                    <path d="M 50,85 Q 25,85 25,63 Q 25,45 46,42 Q 58,15 92,15 Q 124,15 136,40 Q 155,32 174,42 Q 190,50 192,65 Q 214,66 214,76 Q 214,85 194,85 Z" />
+                </svg>
+            </div>
+
+            <div class="cloud-layer-3 absolute bottom-[7%] right-[6%] md:right-[14%] opacity-50">
+                <svg class="w-64 md:w-[26rem] h-auto text-white fill-current" viewBox="0 0 260 110">
+                    <path d="M 45,80 Q 20,80 20,58 Q 20,38 42,36 Q 50,14 78,14 Q 104,14 114,34 Q 126,24 144,26 Q 165,28 170,48 Q 195,50 195,66 Q 195,80 172,80 Z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             UÇAKLAR VE ÇİÇEK YAĞMURU KATMANI
+             ========================================== -->
+        <div id="flightContainer" class="absolute inset-0 pointer-events-none z-20 overflow-hidden"></div>
+        <div id="flowerContainer" class="absolute inset-0 pointer-events-none z-25 overflow-hidden"></div>
+
+        <!-- ==========================================
+             ORTA YAZI, SAYAÇ VE EASTER EGG (gizli.png)
+             ========================================== -->
+        <div class="relative z-30 flex flex-col items-center justify-center text-center pointer-events-none px-6">
+            
+            <!-- GİZLİ EASTER EGG: "iyi yolculuklar..." yazısının tam üstünde süzülür -->
+            <div id="gizliEgg" class="gizli-container">
+                <div class="gizli-float-wrap">
+                    <img id="gizliImg" src="./assets/images/gizli.png" alt="" class="gizli-img" draggable="false" />
+                </div>
+            </div>
+
+            <!-- Üst Yazı -->
+            <p class="text-white/90 text-xl sm:text-2xl md:text-3xl font-normal tracking-[0.14em] drop-shadow-sm mb-2 md:mb-3">
+                iyi yolculuklar...
+            </p>
+
+            <!-- Orta Büyük Sayaç -->
+            <div id="counterValue" class="text-white text-7xl sm:text-8xl md:text-9xl font-extrabold tracking-tight drop-shadow-[0_8px_24px_rgba(20,75,90,0.28)] transition-transform duration-150 ease-out leading-none my-1">
+                0
+            </div>
+
+            <!-- Alt Hafif Yazı -->
+            <span class="text-white/60 text-xs sm:text-sm md:text-base font-light tracking-[0.22em] mt-2">
+                sayılı uçuş
+            </span>
+
+            <!-- İlk tıklamada kaybolan zarif ipucu -->
+            <div id="tapHint" class="mt-10 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-white/80 text-xs tracking-wider transition-opacity duration-500">
+                uçak kaldırmak için ekrana dokun ✈️
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SAĞ ALT KÖŞE: TEST & AYAR PANELİ
+             Varsayılan olarak GİZLİDİR. Açmak için linkin sonuna ?panel=1 yaz.
+             ========================================== -->
+        <div id="controlsWrapper" style="display: none;" class="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+            
+            <div id="orientationPanel" class="hidden glass-panel text-white rounded-2xl p-4 mb-3 w-[94vw] max-w-lg shadow-2xl transition-all duration-200">
+                <div class="flex items-center justify-between border-b border-white/15 pb-2.5 mb-3">
+                    <div>
+                        <h3 class="text-sm font-semibold tracking-wide">Geliştirici Test & Kalibrasyon Paneli</h3>
+                        <p class="text-[11px] text-white/75">Burada açı, ayna ve boyut deneyip kesin değerleri koda yazabilirsin.</p>
+                    </div>
+                    <button id="closePanelBtn" class="text-white/70 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition" title="Kapat">✕</button>
+                </div>
+
+                <!-- Çiçek Yağmuru Hızlı Test Butonları -->
+                <div class="mb-3 pb-2.5 border-b border-white/15">
+                    <div class="text-[11px] font-semibold text-teal-200 mb-1.5">Çiçek Yağmuru Testi:</div>
+                    <div class="grid grid-cols-4 gap-1.5">
+                        <button data-flower-test="25" class="py-1 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] transition">25 Papatya</button>
+                        <button data-flower-test="50" class="py-1 px-2 rounded-lg bg-rose-400/25 hover:bg-rose-400/40 text-[11px] transition">50 Gül</button>
+                        <button data-flower-test="75" class="py-1 px-2 rounded-lg bg-purple-400/25 hover:bg-purple-400/40 text-[11px] transition">75 Menekşe</button>
+                        <button data-flower-test="100" class="py-1 px-2 rounded-lg bg-amber-400/25 hover:bg-amber-400/40 text-[11px] font-semibold transition">100 Şölen</button>
+                    </div>
+                </div>
+
+                <!-- Uçak Listesi -->
+                <div id="planeConfigList" class="space-y-2.5 max-h-[46vh] overflow-y-auto pr-1"></div>
+            </div>
+
+            <button id="togglePanelBtn" class="glass-panel hover:bg-white/20 text-white/90 hover:text-white text-xs px-3.5 py-2 rounded-full shadow-lg flex items-center gap-2 transition duration-200">
+                <span>✈️</span>
+                <span class="font-medium">Test & Kalibrasyon</span>
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        /**
+         * ============================================================================
+         * 1. UÇAK LİSTESİ (VS CODE'DA DEĞİŞTİRDİĞİN HER DEĞER ANINDA GEÇERLİ OLUR)
+         * ============================================================================
+         */
+        const PLANES = [
+            {
+                id: 'a330',
+                name: 'Airbus A330',
+                url: './assets/images/a330.png',
+                size: 180,
+                right: { mirror: true, angle: -6 },
+                left:  { mirror: false, angle: 20 }
+            },
+            {
+                id: 'boeing747',
+                name: 'Boeing 747',
+                url: './assets/images/boeing747.png',
+                size: 205,
+                right: { mirror: true, angle: -25 },
+                left:  { mirror: false, angle: 30 }
+            },
+            {
+                id: 'emirates',
+                name: 'Emirates',
+                url: './assets/images/emirates.png',
+                size: 190,
+                right: { mirror: true, angle: -25 },
+                left:  { mirror: false, angle: 35 }
+            },
+            {
+                id: 'a380',
+                name: 'Airbus A380',
+                url: './assets/images/A380.png',
+                size: 195,
+                right: { mirror: false, angle: -20 },
+                left:  { mirror: true, angle: 20 }
+            },
+            {
+                id: 'thy',
+                name: 'THY',
+                url: './assets/images/thy.png',
+                size: 190,
+                right: { mirror: true, angle: -30 },
+                left:  { mirror: false, angle: 25 }
+            },
+            {
+                id: 'ozoz',
+                name: 'OZOZ',
+                url: './assets/images/OZOZ.png',
+                size: 100,
+                right: { mirror: true, angle: 265 },
+                left:  { mirror: false, angle: 90 }
+            }
+        ];
+
+        /**
+         * ============================================================================
+         * 2. ÇİÇEK & SES DOSYA YOLLARI
+         * ============================================================================
+         */
+        const FLOWERS = {
+            papatya: './assets/images/papatya.png',
+            gul:     './assets/images/gul.png',
+            menekse: './assets/images/menekse.png',
+            lale:    './assets/images/lale.png',
+            orkide:  './assets/images/orkide.png',
+            kalp:    './assets/images/kalp.png'
+        };
+
+        const SOUNDS = {
+            ambient: './assets/sounds/ambient.mp3',
+            planes: [
+                './assets/sounds/plane1.mp3',
+                './assets/sounds/plane2.mp3',
+                './assets/sounds/plane4.mp3',
+                './assets/sounds/plane3.mp3'
+            ],
+            ding: './assets/sounds/ding.mp3',
+            gizli: [
+                './assets/sounds/gizli1.mp3',
+                './assets/sounds/gizli2.mp3'
+            ]
+        };
+
+        // Görsel yüklenemezse gösterilecek şeffaf yedek uçak
+        const FALLBACK_PLANE_SVG = `data:image/svg+xml;utf8,` + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+                <path d="M60 8 C64 8 67 13 67 20 L67 48 L108 66 L108 75 L67 64 L67 92 L82 103 L82 110 L60 104 L38 110 L38 103 L53 92 L53 64 L12 75 L12 66 L53 48 L53 20 C53 13 56 8 60 8 Z" fill="#ffffff" stroke="#1e6b7b" stroke-width="2.5"/>
+            </svg>
+        `);
+
+        // Durum değişkenleri
+        let flightCount = 0;
+        let lastPlaneIndex = -1;
+        let gizliDismissed = false;
+        let gizliNextSoundIdx = Math.random() < 0.5 ? 0 : 1;
+
+        // Ses durumu
+        let ambientEnabled = true;
+        let sfxEnabled = true;
+        let flowersEnabled = true;
+        let ambientStarted = false;
+        let lastPlaneSoundTime = 0;
+        const PLANE_SOUND_COOLDOWN_MS = 2600; // Seri tıklamada üst üste binmeyi önleyen bekleme (2.6 sn)
+
+        // Arka plan (Havalimanı) ses nesnesi
+        const ambientAudio = new Audio(SOUNDS.ambient);
+        ambientAudio.loop = true;
+        ambientAudio.volume = 0.22;
+
+        // DOM Elemanları
+        const skyStage = document.getElementById('skyStage');
+        const flightContainer = document.getElementById('flightContainer');
+        const flowerContainer = document.getElementById('flowerContainer');
+        const counterValue = document.getElementById('counterValue');
+        const tapHint = document.getElementById('tapHint');
+
+        const gizliEgg = document.getElementById('gizliEgg');
+        const gizliImg = document.getElementById('gizliImg');
+
+        const audioControls = document.getElementById('audioControls');
+        const toggleAmbientBtn = document.getElementById('toggleAmbientBtn');
+        const toggleSfxBtn = document.getElementById('toggleSfxBtn');
+        const ambientIcon = document.getElementById('ambientIcon');
+        const sfxIcon = document.getElementById('sfxIcon');
+
+        const toggleFlowersBtn = document.getElementById('toggleFlowersBtn');
+        const flowerSlash = document.getElementById('flowerSlash');
+
+        const controlsWrapper = document.getElementById('controlsWrapper');
+        const orientationPanel = document.getElementById('orientationPanel');
+        const togglePanelBtn = document.getElementById('togglePanelBtn');
+        const closePanelBtn = document.getElementById('closePanelBtn');
+        const planeConfigList = document.getElementById('planeConfigList');
+
+        /**
+         * ============================================================================
+         * 3. SES MOTORU (ARKA PLAN + EFEKTLER)
+         * ============================================================================
+         */
+        function tryStartAmbient() {
+            if (!ambientEnabled || ambientStarted) return;
+            ambientAudio.play()
+                .then(() => { ambientStarted = true; })
+                .catch(() => {});
+        }
+
+        function updateAudioButtonsUI() {
+            ambientIcon.textContent = ambientEnabled ? '🎧' : '🔇';
+            toggleAmbientBtn.classList.toggle('muted', !ambientEnabled);
+
+            sfxIcon.textContent = sfxEnabled ? '🔊' : '🔕';
+            toggleSfxBtn.classList.toggle('muted', !sfxEnabled);
+
+            flowerSlash.classList.toggle('hidden', flowersEnabled);
+            toggleFlowersBtn.classList.toggle('muted', !flowersEnabled);
+        
+        }
+
+        toggleFlowersBtn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            flowersEnabled = !flowersEnabled;
+            if (!flowersEnabled) {
+                flowerContainer.innerHTML = ''; // Kapatıldığı an düşen çiçekleri de temizler
+            }
+            updateAudioButtonsUI();
+        });
+
+        // Arka plan sesi aç/kapa
+        toggleAmbientBtn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            ambientEnabled = !ambientEnabled;
+            if (ambientEnabled) {
+                ambientAudio.play()
+                    .then(() => { ambientStarted = true; })
+                    .catch(() => {});
+            } else {
+                ambientAudio.pause();
+            }
+            updateAudioButtonsUI();
+        });
+
+        // Efekt sesleri aç/kapa
+        toggleSfxBtn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            sfxEnabled = !sfxEnabled;
+            updateAudioButtonsUI();
+        });
+
+        // Ses butonlarına tıklarken gökyüzü tıklamasının tetiklenmesini engelle
+        audioControls.addEventListener('pointerdown', (e) => e.stopPropagation());
+        audioControls.addEventListener('click', (e) => e.stopPropagation());
+
+        /**
+         * Uçak geçiş sesi:
+         * - 2.6 saniyelik cooldown ile seri tıklamada gürültüyü engeller.
+         * - İlk tıklamada kesin çalar, sonrasında cooldown dolduğunda %65 şansla çalar.
+         * - Hız/ton (playbackRate) hafifçe kaydırılarak 3 ses dosyası çok daha zengin duyulur.
+         */
+        function playPlaneFlybySound(force = false) {
+            if (!sfxEnabled || SOUNDS.planes.length === 0) return;
+
+            const now = Date.now();
+            if (!force && (now - lastPlaneSoundTime < PLANE_SOUND_COOLDOWN_MS)) return;
+
+            // İlk uçuşta kesin çalsın, sonrakilerde %65 ihtimalle doğal aralıklarla çalsın
+            if (!force && flightCount > 1 && Math.random() > 0.65) return;
+
+            lastPlaneSoundTime = now;
+            const src = SOUNDS.planes[Math.floor(Math.random() * SOUNDS.planes.length)];
+            const sfx = new Audio(src);
+
+            // Doğal çeşitlilik için ton/hız ve ses seviyesi varyasyonu
+            const rate = 0.86 + Math.random() * 0.28; // 0.86x - 1.14x arası
+            sfx.playbackRate = rate;
+            if ('preservesPitch' in sfx) sfx.preservesPitch = false;
+            if ('webkitPreservesPitch' in sfx) sfx.webkitPreservesPitch = false;
+            if ('mozPreservesPitch' in sfx) sfx.mozPreservesPitch = false;
+
+            sfx.volume = 0.28 + Math.random() * 0.16; // 0.28 - 0.44 arası
+            sfx.play().catch(() => {});
+        }
+
+        function playDingSound() {
+            if (!sfxEnabled) return;
+            const ding = new Audio(SOUNDS.ding);
+            ding.volume = 0.50;
+            ding.play().catch(() => {});
+        }
+
+        function playGizliSound() {
+            if (!sfxEnabled || SOUNDS.gizli.length === 0) return;
+            // İlk basış rastgele, ikinci basışta diğer ses garantili çalar
+            const src = SOUNDS.gizli[gizliNextSoundIdx];
+            gizliNextSoundIdx = (gizliNextSoundIdx + 1) % SOUNDS.gizli.length;
+
+            const gizliAudio = new Audio(src);
+            gizliAudio.volume = 0.65;
+            gizliAudio.play().catch(() => {});
+        }
+
+        /**
+         * ============================================================================
+         * 4. GİZLİ EASTER EGG (gizli.png) MANTIĞI
+         * - Kendi üstüne tıklandıkça kaybolmaz, gizli1/gizli2 seslerinden biri çalar.
+         * - Boş ekrana tıklanıp uçak kaldırıldığı an süzülerek kaybolur (kaçırılmış olur).
+         * ============================================================================
+         */
+        gizliImg.onerror = () => {
+            gizliEgg.style.display = 'none';
+            gizliDismissed = true;
+        };
+
+        gizliEgg.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            if (gizliDismissed) return;
+
+            tryStartAmbient();
+            playGizliSound();
+            createRipple(e.clientX, e.clientY);
+
+            // Basıldığında minik zıplama efekti
+            gizliImg.classList.remove('popped');
+            void gizliImg.offsetWidth;
+            gizliImg.classList.add('popped');
+            setTimeout(() => gizliImg.classList.remove('popped'), 200);
+        });
+
+        function dismissGizliEgg() {
+            if (gizliDismissed) return;
+            gizliDismissed = true;
+            gizliEgg.classList.add('dismissed');
+            setTimeout(() => {
+                gizliEgg.style.display = 'none';
+            }, 1600);
+        }
+
+        /**
+         * ============================================================================
+         * 5. ÇİÇEK & KALP YAĞMURU SİSTEMİ
+         * 25: Papatya | 50: Gül | 75: Menekşe | 100: Toplu Şölen | 125: Tekrar başa...
+         * ============================================================================
+         */
+        function checkMilestone(count) {
+            if (!flowersEnabled || count <= 0 || count % 25 !== 0) return;
+            triggerFlowerShower(count);
+        }
+
+        function triggerFlowerShower(milestoneCount) {
+            playDingSound();
+
+            const mod = milestoneCount % 100;
+            let imagePool = [];
+            let pieceCount = 34;
+            let isGrandFinale = false;
+            let colorMode = 'gentle';
+
+            if (mod === 25) {
+                imagePool = [FLOWERS.papatya];
+                pieceCount = 32;
+                colorMode = 'daisy';
+            } else if (mod === 50) {
+                imagePool = [FLOWERS.gul];
+                pieceCount = 38;
+                colorMode = 'rose';
+            } else if (mod === 75) {
+                imagePool = [FLOWERS.menekse];
+                pieceCount = 34;
+                colorMode = 'violet';
+            } else {
+                // 100, 200, 300... Toplu Şölen
+                imagePool = [
+                    FLOWERS.lale,
+                    FLOWERS.orkide,
+                    FLOWERS.papatya,
+                    FLOWERS.gul,
+                    FLOWERS.menekse,
+                    FLOWERS.kalp
+                ];
+                pieceCount = 65;
+                isGrandFinale = true;
+                colorMode = 'festive';
+            }
+
+            const isMobile = window.innerWidth < 640;
+            const slotOrder = Array.from({ length: pieceCount }, (_, i) => i).sort(() => Math.random() - 0.5);
+
+
+            for (let i = 0; i < pieceCount; i++) {
+                    const src = imagePool[i % imagePool.length];
+                    spawnSingleFlower(src, colorMode, isGrandFinale, isMobile, slotOrder[i], pieceCount, i);
+                }
+        }
+
+        function getFlowerFilter(colorMode) {
+            const shadow = 'drop-shadow(0 6px 12px rgba(14, 58, 71, 0.22))';
+            if (colorMode === 'rose') {
+                // Güllerde kırmızı, pembe-gül, bordo arası hafif ve zarif renk tonları
+                const hue = Math.round(-26 + Math.random() * 44);
+                const sat = (0.85 + Math.random() * 0.45).toFixed(2);
+                const bri = (0.90 + Math.random() * 0.22).toFixed(2);
+                return `hue-rotate(${hue}deg) saturate(${sat}) brightness(${bri}) ${shadow}`;
+            }
+            if (colorMode === 'violet') {
+                const hue = Math.round(-22 + Math.random() * 44);
+                const bri = (0.92 + Math.random() * 0.20).toFixed(2);
+                return `hue-rotate(${hue}deg) brightness(${bri}) ${shadow}`;
+            }
+            if (colorMode === 'daisy') {
+                const hue = Math.round(-8 + Math.random() * 16);
+                const bri = (0.95 + Math.random() * 0.14).toFixed(2);
+                return `hue-rotate(${hue}deg) brightness(${bri}) ${shadow}`;
+            }
+            // Toplu şölen için hafif canlı ton değişimleri
+            const hue = Math.round(-16 + Math.random() * 32);
+            const bri = (0.94 + Math.random() * 0.16).toFixed(2);
+            return `hue-rotate(${hue}deg) brightness(${bri}) ${shadow}`;
+        }
+
+        function spawnSingleFlower(src, colorMode, isGrandFinale, isMobile, slotIndex, totalCount, orderIndex) {
+            const faller = document.createElement('div');
+            faller.className = 'flower-faller';
+
+            const swayer = document.createElement('div');
+            swayer.className = 'flower-swayer';
+
+            const img = document.createElement('img');
+            img.className = 'flower-img';
+            img.src = src;
+            img.alt = '';
+            img.draggable = false;
+
+            img.onerror = () => faller.remove();
+
+            // Her çiçeği kendi şeridine yerleştir (üst üste binmeyi önler)
+            const sliceWidth = 94 / totalCount;
+            const startLeftPct = 2 + (slotIndex * sliceWidth) + (Math.random() * sliceWidth * 0.8);
+
+            // Zamana yayarak akıcı bir yağmur oluştur (anlık yığılmayı önler)
+            const spreadWindow = isGrandFinale ? 3.2 : 2.2;
+            const fallDelay = ((orderIndex / totalCount) * spreadWindow + Math.random() * 0.45).toFixed(2);
+            const fallDuration = (4.4 + Math.random() * 2.6).toFixed(2);
+
+            const driftX = Math.round(-110 + Math.random() * 220);
+            const swayAmp = Math.round(16 + Math.random() * 30);
+            const swayDuration = (2.1 + Math.random() * 1.9).toFixed(2);
+            const swayDelay = (-Math.random() * 2.5).toFixed(2);
+
+            const rotStart = Math.round(-55 + Math.random() * 110);
+            const rotMid = rotStart + Math.round(-35 + Math.random() * 70);
+            const rotEnd = rotStart + Math.round(-65 + Math.random() * 130);
+
+            const baseSize = isMobile
+                ? Math.round(34 + Math.random() * 22)
+                : Math.round(44 + Math.random() * 32);
+
+            faller.style.left = `${startLeftPct.toFixed(2)}%`;
+            faller.style.setProperty('--drift-x', `${driftX}px`);
+            faller.style.setProperty('--fall-duration', `${fallDuration}s`);
+            faller.style.setProperty('--fall-delay', `${fallDelay}s`);
+
+            swayer.style.setProperty('--sway-amp', `${swayAmp}px`);
+            swayer.style.setProperty('--sway-duration', `${swayDuration}s`);
+            swayer.style.setProperty('--sway-delay', `${swayDelay}s`);
+            swayer.style.setProperty('--rot-start', `${rotStart}deg`);
+            swayer.style.setProperty('--rot-mid', `${rotMid}deg`);
+            swayer.style.setProperty('--rot-end', `${rotEnd}deg`);
+
+            img.style.setProperty('--flower-size', `${baseSize}px`);
+            img.style.setProperty('--flower-filter', getFlowerFilter(colorMode));
+
+            swayer.appendChild(img);
+            faller.appendChild(swayer);
+            flowerContainer.appendChild(faller);
+
+            const totalLifeMs = (parseFloat(fallDuration) + parseFloat(fallDelay)) * 1000 + 250;
+            setTimeout(() => faller.remove(), totalLifeMs);
+        }
+
+        /**
+         * ============================================================================
+         * 6. UÇAK SEÇİMİ VE AKILLI AYNA UÇUŞ MOTORU
+         * ============================================================================
+         */
+        function preloadImages() {
+            PLANES.forEach((plane) => {
+                const img = new Image();
+                img.onerror = () => { plane.fallback = true; };
+                img.src = plane.url;
+            });
+            Object.values(FLOWERS).forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
+        function getRandomPlane() {
+            if (PLANES.length === 1) return PLANES[0];
+            let idx;
+            do {
+                idx = Math.floor(Math.random() * PLANES.length);
+            } while (idx === lastPlaneIndex);
+            lastPlaneIndex = idx;
+            return PLANES[idx];
+        }
+
+        function incrementCounter() {
+            flightCount++;
+            counterValue.textContent = flightCount;
+
+            if (flightCount === 1 && tapHint) {
+                tapHint.style.opacity = '0';
+            }
+
+            counterValue.classList.add('counter-pop');
+            clearTimeout(counterValue._popTimer);
+            counterValue._popTimer = setTimeout(() => {
+                counterValue.classList.remove('counter-pop');
+            }, 130);
+
+            checkMilestone(flightCount);
+        }
+
+        function createRipple(x, y) {
+            const ripple = document.createElement('div');
+            ripple.className = 'tap-ripple';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            flightContainer.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 650);
+        }
+
+        function spawnPlane(forcedPlane = null, forcedDirection = null) {
+            const plane = forcedPlane || getRandomPlane();
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const isMobile = vw < 640;
+            const displaySize = Math.round(isMobile ? plane.size * 0.78 : plane.size);
+
+            const direction = forcedDirection || (Math.random() < 0.5 ? 'right' : 'left');
+
+            let startX, endX;
+            const travelDistanceX = vw * (0.24 + Math.random() * 0.24);
+
+            if (direction === 'right') {
+                startX = Math.round(vw * (0.02 + Math.random() * 0.68));
+                endX = Math.round(startX + travelDistanceX);
+            } else {
+                startX = Math.round(vw * (0.30 + Math.random() * 0.68));
+                endX = Math.round(startX - travelDistanceX);
+            }
+
+            const activeProfile = (endX >= startX) ? plane.right : plane.left;
+
+            const startY = vh + 110;
+            const endY = -220;
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+            const duration = (3.6 + Math.random() * 0.9).toFixed(2);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'plane-wrapper';
+            wrapper.style.left = `${startX}px`;
+            wrapper.style.top = `${startY}px`;
+            wrapper.style.setProperty('--flight-duration', `${duration}s`);
+            wrapper.style.setProperty('--delta-x', `${deltaX}px`);
+            wrapper.style.setProperty('--delta-y', `${deltaY}px`);
+
+            const img = document.createElement('img');
+            img.className = 'plane-img';
+            img.src = plane.fallback ? FALLBACK_PLANE_SVG : plane.url;
+            img.alt = plane.name;
+            img.style.setProperty('--plane-size', `${displaySize}px`);
+
+            img.onerror = function () {
+                this.onerror = null;
+                this.src = FALLBACK_PLANE_SVG;
+            };
+
+            const angleDeg = Number(activeProfile.angle) || 0;
+            const scaleX = activeProfile.mirror ? -1 : 1;
+            img.style.transform = `translate(-50%, -50%) rotate(${angleDeg}deg) scaleX(${scaleX})`;
+
+            wrapper.appendChild(img);
+            flightContainer.appendChild(wrapper);
+
+            setTimeout(() => wrapper.remove(), parseFloat(duration) * 1000 + 150);
+        }
+
+        /**
+         * ============================================================================
+         * 7. ANA GÖKYÜZÜ TIKLAMA VE KLAVYE ETKİLEŞİMLERİ
+         * ============================================================================
+         */
+        skyStage.addEventListener('pointerdown', (e) => {
+            if (controlsWrapper.contains(e.target) || audioControls.contains(e.target) || gizliEgg.contains(e.target)) {
+                return;
+            }
+
+            tryStartAmbient();
+            dismissGizliEgg();
+            incrementCounter();
+            createRipple(e.clientX, e.clientY);
+            spawnPlane();
+            playPlaneFlybySound();
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                return;
+            }
+            if (e.code === 'Space' || e.code === 'Enter') {
+                e.preventDefault();
+                tryStartAmbient();
+                dismissGizliEgg();
+                incrementCounter();
+                spawnPlane();
+                playPlaneFlybySound();
+            }
+        });
+
+        /**
+         * ============================================================================
+         * 8. GELİŞTİRİCİ TEST & KALİBRASYON PANELİ (?panel=1 İLE AÇILIR)
+         * ============================================================================
+         */
+        function initDevPanelIfRequested() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('panel') !== '1') return;
+
+            controlsWrapper.style.display = 'flex';
+
+            controlsWrapper.addEventListener('pointerdown', (e) => e.stopPropagation());
+            controlsWrapper.addEventListener('click', (e) => e.stopPropagation());
+
+            togglePanelBtn.addEventListener('click', () => {
+                orientationPanel.classList.toggle('hidden');
+                renderConfigPanel();
+            });
+
+            closePanelBtn.addEventListener('click', () => {
+                orientationPanel.classList.add('hidden');
+            });
+
+            // Çiçek testi butonları
+            orientationPanel.querySelectorAll('button[data-flower-test]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const testVal = parseInt(btn.getAttribute('data-flower-test'), 10);
+                    triggerFlowerShower(testVal);
+                });
+            });
+
+            renderConfigPanel();
+        }
+
+        function renderConfigPanel() {
+            planeConfigList.innerHTML = '';
+
+            PLANES.forEach((plane, idx) => {
+                const row = document.createElement('div');
+                row.setAttribute('data-plane-row', idx);
+                row.className = 'bg-white/10 rounded-xl p-3 border border-white/10 space-y-2.5';
+
+                const rScale = plane.right.mirror ? -1 : 1;
+                const lScale = plane.left.mirror ? -1 : 1;
+
+                row.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-2 flex-wrap">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-white">${idx + 1}. ${plane.name}</span>
+                            <div class="flex items-center gap-1 bg-black/25 rounded px-1.5 py-0.5">
+                                <span class="text-[10px] text-white/70">Boyut:</span>
+                                <input type="number" step="5" min="40" max="450" value="${plane.size}"
+                                       data-idx="${idx}"
+                                       class="size-input w-12 bg-transparent text-white text-xs font-semibold text-center focus:outline-none" />
+                                <span class="text-[10px] text-white/60">px</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button data-action="test-right" data-idx="${idx}" class="px-2 py-1 rounded-lg bg-teal-400/35 hover:bg-teal-400/55 text-[11px] font-semibold text-white transition">Sağa ↗</button>
+                            <button data-action="test-left" data-idx="${idx}" class="px-2 py-1 rounded-lg bg-sky-400/35 hover:bg-sky-400/55 text-[11px] font-semibold text-white transition">Sola ↖</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div class="bg-black/20 rounded-xl p-2 border border-white/10 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-10 h-10 rounded-lg bg-sky-950/70 border border-white/15 flex items-center justify-center overflow-hidden shrink-0">
+                                    <img src="${plane.url}" alt="${plane.name}"
+                                         class="thumb-right"
+                                         onerror="this.src='${FALLBACK_PLANE_SVG}'"
+                                         style="transform: rotate(${plane.right.angle}deg) scaleX(${rScale}); max-width: 32px; max-height: 32px; object-fit: contain;" />
+                                </div>
+                                <div>
+                                    <div class="text-[11px] font-semibold text-teal-200">Sağa ↗</div>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        <input type="number" step="1" min="-360" max="360" value="${plane.right.angle}"
+                                               data-idx="${idx}" data-dir="right"
+                                               class="dir-angle-input w-12 bg-black/35 border border-white/15 rounded px-1 py-0.5 text-white text-xs font-semibold text-center focus:outline-none" />
+                                        <span class="text-[10px] text-teal-200">°</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button data-action="flip-right" data-idx="${idx}" class="px-2 py-1 rounded-lg border text-[10px] font-medium transition ${plane.right.mirror ? 'bg-teal-400/40 border-teal-200/60 text-white' : 'bg-white/10 border-transparent text-white/75'}">
+                                ${plane.right.mirror ? 'Ayna: Açık' : 'Ayna: Yok'}
+                            </button>
+                        </div>
+
+                        <div class="bg-black/20 rounded-xl p-2 border border-white/10 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-10 h-10 rounded-lg bg-sky-950/70 border border-white/15 flex items-center justify-center overflow-hidden shrink-0">
+                                    <img src="${plane.url}" alt="${plane.name}"
+                                         class="thumb-left"
+                                         onerror="this.src='${FALLBACK_PLANE_SVG}'"
+                                         style="transform: rotate(${plane.left.angle}deg) scaleX(${lScale}); max-width: 32px; max-height: 32px; object-fit: contain;" />
+                                </div>
+                                <div>
+                                    <div class="text-[11px] font-semibold text-sky-200">Sola ↖</div>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        <input type="number" step="1" min="-360" max="360" value="${plane.left.angle}"
+                                               data-idx="${idx}" data-dir="left"
+                                               class="dir-angle-input w-12 bg-black/35 border border-white/15 rounded px-1 py-0.5 text-white text-xs font-semibold text-center focus:outline-none" />
+                                        <span class="text-[10px] text-sky-200">°</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button data-action="flip-left" data-idx="${idx}" class="px-2 py-1 rounded-lg border text-[10px] font-medium transition ${plane.left.mirror ? 'bg-sky-400/40 border-sky-200/60 text-white' : 'bg-white/10 border-transparent text-white/75'}">
+                                ${plane.left.mirror ? 'Ayna: Açık' : 'Ayna: Yok'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                planeConfigList.appendChild(row);
+            });
+
+            // Boyut değiştirme
+            planeConfigList.querySelectorAll('.size-input').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-idx'), 10);
+                    const val = parseInt(e.target.value, 10);
+                    if (!isNaN(val) && val >= 40) {
+                        PLANES[idx].size = val;
+                    }
+                });
+            });
+
+            // Açı değiştirme
+            planeConfigList.querySelectorAll('.dir-angle-input').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-idx'), 10);
+                    const dir = e.target.getAttribute('data-dir');
+                    const val = parseFloat(e.target.value);
+                    if (!isNaN(val)) {
+                        PLANES[idx][dir].angle = val;
+                        const row = planeConfigList.querySelector(`[data-plane-row="${idx}"]`);
+                        const thumb = row.querySelector(dir === 'right' ? '.thumb-right' : '.thumb-left');
+                        const scale = PLANES[idx][dir].mirror ? -1 : 1;
+                        if (thumb) thumb.style.transform = `rotate(${val}deg) scaleX(${scale})`;
+                    }
+                });
+            });
+
+            // Ayna ve test butonları
+            planeConfigList.querySelectorAll('button[data-action]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.getAttribute('data-idx'), 10);
+                    const action = btn.getAttribute('data-action');
+                    const plane = PLANES[idx];
+
+                    if (action === 'flip-right') {
+                        plane.right.mirror = !plane.right.mirror;
+                        renderConfigPanel();
+                        spawnPlane(plane, 'right');
+                    } else if (action === 'flip-left') {
+                        plane.left.mirror = !plane.left.mirror;
+                        renderConfigPanel();
+                        spawnPlane(plane, 'left');
+                    } else if (action === 'test-right') {
+                        spawnPlane(plane, 'right');
+                        playPlaneFlybySound(true);
+                    } else if (action === 'test-left') {
+                        spawnPlane(plane, 'left');
+                        playPlaneFlybySound(true);
+                    }
+                });
+            });
+        }
+
+        // Başlangıç
+        window.onload = function () {
+            preloadImages();
+            updateAudioButtonsUI();
+            initDevPanelIfRequested();
+        };
+    </script>
+</body>
+</html>
